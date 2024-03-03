@@ -2,17 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class User {
   @ApiProperty()
-  id!: string;
+  id!: number;
 
   @ApiProperty()
   username!: string;
 
-  password!: string;
-
   @ApiProperty({
     type: Date,
   })
-  createdOn!: string;
+  createdOn?: Date;
 
   @ApiProperty({
     enum: ['Admin', 'User'],
