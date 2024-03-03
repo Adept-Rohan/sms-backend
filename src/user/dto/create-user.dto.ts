@@ -17,7 +17,7 @@ export class CreateUserDto {
 
   @IsString()
   @Transform(({ value }) => bcrypt.hashSync(value, 12))
-  password!: string;
+  password: string;
 
   @IsEnum(UserRole)
   @ApiProperty({

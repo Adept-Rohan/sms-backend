@@ -15,11 +15,14 @@ export class UserService extends KnexBase<
     super(knex);
   }
 
-  // createUser(dto: CreateUserDto) {
-  //   return this.table.insert(dto);
-  // }
-
   findByUserName(username: string, usernameField = 'username') {
     return this.table.where(usernameField, '=', username).first();
+  }
+
+  deleteUser(id: number) {
+    return this.table
+      .where({ id: id })
+      .select('password', 'createdOn', 'id', 'username', 'role')
+      .delete();
   }
 }

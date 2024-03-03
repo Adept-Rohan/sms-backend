@@ -3,7 +3,10 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  Param,
   ParseIntPipe,
+  Patch,
+  Delete,
   Post,
   Query,
 } from '@nestjs/common';
@@ -18,6 +21,8 @@ import {
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRes } from './entities/user-res.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { DeleteUser } from './entities/user-delete.entity';
 
 @Controller('user')
 @ApiTags('Users')
@@ -74,5 +79,23 @@ export class UserController {
     };
 
     return res;
+  }
+
+  @Get(':id')
+  @ApiOkResponse({ type: User })
+  findOne(@Param('id') id: number) {
+    return this.userService.findById(+id).select('*');
+  }
+
+  @Patch(':id')
+  @ApiOkResponse({ type: User })
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(+id, updateUserDto);
+  }
+
+  @Delete(':id')
+  @ApiOkResponse({ type: DeleteUser })
+  delete(@Param('id') id: number) {
+    return this.userService.deleteUser(id);
   }
 }
