@@ -81,15 +81,9 @@ export class UserController {
     return res;
   }
 
-  @Get(':id')
-  @ApiOkResponse({ type: User })
-  findOne(@Param('id') id: number) {
-    return this.userService.findById(+id).select('*');
-  }
-
   @Patch(':id')
   @ApiOkResponse({ type: User })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
