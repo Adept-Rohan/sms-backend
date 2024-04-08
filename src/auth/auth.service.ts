@@ -2,11 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectKnex } from 'src/knex/knex.decorator';
 import { UserService } from 'src/user/user.service';
-import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import ms from 'ms';
+import ms = require('ms');
 
 @Injectable()
 export class AuthService {
@@ -17,30 +16,24 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async validateUser(
-    username: string,
-    password: string,
-    loginType: 'USER' | 'ADMIN' = 'USER',
-  ) {
-    // const user = this.userService.findByUserName(username);
-
-    const user = await (loginType === 'ADMIN'
-      ? //   ? this.adminService.findByUsername(username, 'email')
-        null
-      : this.userService.findByUserName(username));
+  async validateUser(username: string, password: string) {
+    const user = await this.userService.findByUserName(username);
+    console.log('🚀 ~ AuthService ~ user:', user);
 
     if (!user)
       throw new BadRequestException(
         'The user with the given name does not exists',
       );
 
-    if (user && bcrypt.compareSync(password, user?.password)) {
+    if (password === user.password) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
 
+      console.log('🚀 ~ AuthService ~ validateUser ~ result:', result);
       return result;
+    } else {
+      throw new BadRequestException('The password does not match.');
     }
-    return null;
   }
 
   async login(user: User) {
@@ -56,11 +49,13 @@ export class AuthService {
       secret: this.configService.get('jwt.jwtSecret'),
       expiresIn: ms(1 * 24 * 60 * 60 * 1000),
     });
+    console.log('🚀 ~ AuthService ~ login ~ accessToken:', accessToken);
 
     const refreshToken = this.jwtService.sign(refreshPayload, {
       secret: this.configService.get('jwt.jwtRefresh'),
-      expiresIn: ms(1 * 24 * 60 * 60 * 1000),
+      expiresIn: ms(30 * 24 * 60 * 60 * 1000),
     });
+    console.log('🚀 ~ AuthService ~ login ~ refreshToken:', refreshToken);
     return {
       user,
       accessToken,
