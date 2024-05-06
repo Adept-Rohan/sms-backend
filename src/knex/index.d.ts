@@ -14,11 +14,36 @@ declare module 'knex/types/tables' {
     userToken: string;
   }
 
+  interface KnexRoom {
+    id: number;
+    roomNumber: string;
+    floorId: number;
+    price: string;
+    description: string;
+  }
+
+  interface KnexFloor {
+    id: number;
+    floorName: string;
+  }
+
   interface Tables {
     user: Knex.CompositeTableType<
       KnexUser,
       Omit<KnexUser, 'id'>,
       Partial<Pick<KnexUser>, 'id'>
+    >;
+
+    room: Knex.CompositeTableType<
+      KnexRoom,
+      Omit<KnexRoom, 'id'>,
+      Partial<Pick<KnexRoom>, 'id'>
+    >;
+
+    floor: Knex.CompositeTableType<
+      KnexFloor,
+      Omit<KnexFloor, 'id'>,
+      Partial<Pick<KnexFloor>, 'id'>
     >;
 
     userToken: Knex.CompositeTableType<
