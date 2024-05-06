@@ -8,8 +8,20 @@ exports.up = function (knex) {
     table.increments('id');
     table.string('username').notNullable();
     table.string('password').notNullable();
+    table.string('address').notNullable();
+    table.string('image').notNullable();
+    table.string('college');
+    table.boolean('isActive').defaultTo(true).notNullable();
     table.dateTime('createdOn').defaultTo(knex.fn.now());
-    table.enum('role', ['ADMIN', 'USER']).defaultTo('USER');
+    table.string('phoneNumber').notNullable();
+    table.string('joinedDate');
+    table.string('leaveDate');
+    table
+      .integer('roomId')
+      .unsigned()
+      .nullable()
+      .references('id')
+      .inTable('room');
   });
 };
 
