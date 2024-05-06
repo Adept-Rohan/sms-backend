@@ -74,7 +74,10 @@ export class UserController {
       totalCountQuery.whereILike('username', `%${search}%`);
     }
 
+    const data = await query.select();
+
     const res = {
+      data: data,
       totalCountQuery: (await totalCountQuery.first())?.count ?? 0,
     };
 

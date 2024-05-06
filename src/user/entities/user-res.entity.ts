@@ -3,5 +3,8 @@ import { User } from './user.entity';
 
 export class UserRes {
   @ApiProperty()
-  data: User[];
+  data!: User[];
+
+  @ApiProperty()
+  totalCount!: number;
 }
